@@ -6,7 +6,6 @@ function App() {
   return (
     <>
       <a href={'https://github.com/login/oauth/authorize?client_id=' + CLIENT_ID}>Log in with Github</a>
-      <p>hellooooo</p>
     </>
   )
 }
