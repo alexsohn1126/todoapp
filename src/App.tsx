@@ -1,11 +1,11 @@
+import { Outlet } from 'react-router';
 import './App.css';
-
-const CLIENT_ID = import.meta.env.VITE_CLIENT_ID;
 
 function App() {
   return (
     <>
-      <a href={'https://github.com/login/oauth/authorize?client_id=' + CLIENT_ID}>Log in with Github</a>
+      <p>Something Something hi hi hi this is the main app thingy eaeyaeyaye y</p>
+      <Outlet />
     </>
   )
 }

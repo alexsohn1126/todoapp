@@ -1,4 +1,5 @@
 import express, { Request, Response } from "express";
+import cookie_parser from "cookie-parser";
 import cors from "cors";
 import dotenv from "dotenv";
 
@@ -9,8 +10,26 @@ const PORT = process.env.PORT || 4567;
 const CLIENT_ID = process.env.VITE_CLIENT_ID as string;
 const CLIENT_SECRET = process.env.VITE_CLIENT_SECRET as string;
 
-app.use(cors());
+app.use(cors({
+  origin: "http://localhost:5173",
+  credentials: true,
+}));
 app.use(express.json());
+
+type GithubUserInfoResponse = {
+  id?: number,
+  name?: string,
+  login?: string
+};
+
+type GithubAuthResponse = {
+  access_token: string;
+  expires_in?: number;
+  refresh_token?: string;
+  refresh_token_expires_in?: number;
+  scope: string;
+  token_type: "bearer";
+};
 
 function exchange_code(code: string): Promise<any> {
   const params = new URLSearchParams({
@@ -55,22 +74,28 @@ app.get("/github/callback", async (req: Request, res:Response) => {
     return res.status(400).send("No code provided");
   }
 
-  const github_res = await exchange_code(code) as globalThis.Response;
+  const github_auth = await exchange_code(code) as GithubAuthResponse;
+  console.log("grabbed github auth");
 
-  console.log(github_res);
-
-  if (!("access_token" in github_res)) {
+  if (!github_auth.access_token
+    || !github_auth.expires_in
+    || !github_auth.refresh_token
+    || !github_auth.refresh_token_expires_in) {
     return res.status(400).send("Failed to get the exchange code for token");
   }
 
-  const access_token = github_res.access_token as string;
-  const user =  await user_info(access_token) as globalThis.Response;
+  res.cookie("refresh_token", github_auth.refresh_token, {
+    maxAge: github_auth.refresh_token_expires_in * 1000,
+  });
 
-  if (!("login" in user) || !("name" in user)) {
-    return res.status(400).send("Failed to get user information");
-  }
+  // const user =  await user_info(access_token) as GithubUserInfoResponse;
 
-  res.send(`Got user info! Welcome ${user.name}, with username ${user.login}`);
+  // if (!user.id || !user.login || !user.name) {
+  //   return res.status(400).send("Failed to get user information");
+  // }
+
+  console.log("succ");
+  return res.status(200).send();
 });
 
 
