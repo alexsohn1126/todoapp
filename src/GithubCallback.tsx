@@ -33,7 +33,7 @@ function GithubCallback() : JSX.Element {
     })
       .then(res => {console.log(res); return res})
       .then(data => {
-        if (data.status == 200) {
+        if (data.ok) {
           navigate('/');
           console.log("Successfully logged in..");
         } else {
