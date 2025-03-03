@@ -2,6 +2,7 @@ import { useContext, useEffect } from "react";
 import { useParams } from "react-router";
 import { useGithubRequest } from "./utils";
 import { UserNameContext } from "./UserNameContext";
+import Markdown from "react-markdown";
 
 interface githubFile {
   type: "file" | "dir" | "symlink" | "submodule";
@@ -18,8 +19,7 @@ function Note() {
 
   // Function to decode Base64 content
   const decodeBase64Content = (encodedContent: string): string => {
-    const base64WithoutNewlines = encodedContent.replace(/\n/g, "");
-    return atob(base64WithoutNewlines);
+    return atob(encodedContent);
   };
 
   // Decode the content if it exists
@@ -34,10 +34,9 @@ function Note() {
   return (
     <>
       <h1>Repo: {id}</h1>
-      <pre>{decodedContent}</pre>
+      <Markdown>{decodedContent}</Markdown>
     </>
   );
-  ("");
 }
 
 export default Note;
