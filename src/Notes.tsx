@@ -1,6 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { useGithubRequest } from "./utils";
 import { UserNameContext } from "./UserNameContext";
+import { Link } from "react-router";
 
 interface repo {
   id: number;
@@ -19,12 +20,18 @@ function Notes() {
   }, [data]);
 
   return (
-    <div>
-      <p>repos for {userName}</p>
-      {repos.map((repo) => {
-        return <p key={repo.id}>{repo.name}</p>;
-      })}
-    </div>
+    <>
+      <div className="flex flex-col">
+        <p>repos for {userName}</p>
+        {repos.map((repo) => {
+          return (
+            <Link to={`/notes/${repo.name}`} key={repo.id}>
+              {repo.name}
+            </Link>
+          );
+        })}
+      </div>
+    </>
   );
 }
 

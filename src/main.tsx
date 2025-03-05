@@ -16,7 +16,7 @@ createRoot(document.getElementById("root")!).render(
         <Route path="/" element={<AuthPage />}>
           <Route path="" element={<App />} />
           <Route path="/notes" element={<Notes />} />
-          <Route path="/note/:id" element={<Note />} />
+          <Route path="/notes/:id" element={<Note />} />
         </Route>
         <Route path="/github/callback" element={<GithubCallback />} />
         <Route path="login" element={<Login />} />
